@@ -26,14 +26,25 @@ def scan_dexscreener():
                     liquidity = p.get("liquidity", {}).get("usd", 0)
 
                     if liquidity and liquidity > 3000:
+                        # 🔥 GET SOCIALS
+                        socials = p.get("info", {}).get("socials", [])
+
+                        discord_link = "Not found"
+
+                        for s in socials:
+                            if s.get("type") == "discord":
+                                discord_link = s.get("url")
+
                         results.append({
                             "source": "DexScreener",
                             "name": p["baseToken"]["name"],
                             "symbol": p["baseToken"]["symbol"],
                             "liq": liquidity,
                             "chain": p.get("chainId"),
-                            "url": p["url"]
+                            "url": p["url"],
+                            "discord": discord_link
                         })
+
                 except:
                     continue
 
@@ -69,7 +80,8 @@ def scan_gecko():
                     "symbol": "",
                     "liq": attr.get("reserve_in_usd", 0),
                     "chain": p.get("id"),
-                    "url": attr.get("pool_address")
+                    "url": "https://www.geckoterminal.com",
+                    "discord": "Not available"
                 })
             except:
                 continue
@@ -98,13 +110,16 @@ def scan_pump_fun():
 
         for c in data[:20]:
             try:
+                discord_link = c.get("discord") or "Not found"
+
                 results.append({
                     "source": "Pump.fun",
                     "name": c.get("name"),
                     "symbol": c.get("symbol"),
                     "liq": c.get("usd_market_cap", 0),
                     "chain": "solana",
-                    "url": f"https://pump.fun/{c.get('mint')}"
+                    "url": f"https://pump.fun/{c.get('mint')}",
+                    "discord": discord_link
                 })
             except:
                 continue
