@@ -27,13 +27,20 @@ def dedupe(item):
 
 # ---------------- FORMAT ----------------
 def format_item(item):
+    url = item.get("url", "")
+    discord = item.get("discord", "Not found")
+
+    if url and not url.startswith("http"):
+        url = "https://" + url
+
     return f"""🔥 {item['source']} ALERT
 
 Name: {item['name']} ({item['symbol']})
 Chain: {item['chain']}
 Liquidity/MC: ${item['liq']}
 
-{item['url']}
+🌐 Link: {url}
+💬 Discord: {discord}
 """
 
 # ---------------- RUN ----------------
@@ -64,7 +71,7 @@ def run_all():
 def main():
     keep_alive()
 
-    send("✅ Meme Radar PRO ONLINE (LIVE)")
+    send("✅ Meme Radar PRO ONLINE (WITH DISCORD + LINKS)")
 
     while True:
         try:
